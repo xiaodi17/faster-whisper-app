@@ -28,7 +28,7 @@ class Config:
     web_port: int = 8000
     
     # Global hotkey
-    hotkey: str = "ctrl+space"
+    hotkey: str = "double_ctrl"
     
     # Logging
     log_level: str = "INFO"
@@ -44,7 +44,7 @@ def load_config() -> Config:
         channels=int(os.getenv("AUDIO_CHANNELS", "1")),
         web_host=os.getenv("WEB_HOST", "localhost"),
         web_port=int(os.getenv("WEB_PORT", "8000")),
-        hotkey=os.getenv("HOTKEY", "ctrl+space"),
+        hotkey=os.getenv("HOTKEY", "double_ctrl"),
         log_level=os.getenv("LOG_LEVEL", "INFO"),
     )
 
