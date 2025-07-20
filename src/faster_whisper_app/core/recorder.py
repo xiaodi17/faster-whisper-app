@@ -107,6 +107,10 @@ class AudioRecorder:
                 if device_info['maxInputChannels'] == 0:
                     raise DeviceError(f"Device {device_index} is not an input device")
                 logger.info(f"Using device: {device_info['name']}")
+                print(f"🎤 Using device {device_index}: {device_info['name']}")
+            else:
+                default_device = self.get_default_input_device()
+                print(f"🎤 Using default device: {default_device['name']}")
             
             # Start recording in separate thread
             self.is_recording = True

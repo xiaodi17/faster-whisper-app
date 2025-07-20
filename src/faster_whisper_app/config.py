@@ -7,7 +7,12 @@ from typing import Optional
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
+import os
+print(f"🔧 Current working directory: {os.getcwd()}")
+print(f"🔧 Looking for .env at: {os.path.join(os.getcwd(), '.env')}")
+print(f"🔧 .env exists: {os.path.exists('.env')}")
 load_dotenv()
+print(f"🔧 AUDIO_DEVICE_INDEX from env: {os.getenv('AUDIO_DEVICE_INDEX')}")
 
 
 @dataclass
@@ -22,6 +27,7 @@ class Config:
     # Audio settings
     sample_rate: int = 16000
     channels: int = 1
+    audio_device_index: Optional[int] = None  # None for default, or specific device index
     
     # Web interface
     web_host: str = "localhost"
@@ -42,6 +48,7 @@ def load_config() -> Config:
         compute_type=os.getenv("FASTER_WHISPER_COMPUTE_TYPE", "int8"),
         sample_rate=int(os.getenv("AUDIO_SAMPLE_RATE", "16000")),
         channels=int(os.getenv("AUDIO_CHANNELS", "1")),
+        audio_device_index=int(os.getenv("AUDIO_DEVICE_INDEX")) if os.getenv("AUDIO_DEVICE_INDEX") else None,
         web_host=os.getenv("WEB_HOST", "localhost"),
         web_port=int(os.getenv("WEB_PORT", "8000")),
         hotkey=os.getenv("HOTKEY", "double_ctrl"),

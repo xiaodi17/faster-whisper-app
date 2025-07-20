@@ -8,7 +8,7 @@ from typing import Optional
 from .core.transcriber import FasterWhisperTranscriber
 from .core.recorder import AudioRecorder
 from .core.exceptions import TranscriptionError, AudioRecordingError, ModelLoadError
-from .interfaces.hotkey_handler import DoubleCtrlHotkeyHandler
+from .interfaces.hotkey_handler import AlternativeHotkeyHandler
 from .interfaces.terminal_interface import TerminalInterface
 from .config import load_config
 
@@ -26,10 +26,11 @@ class SpeechToTextApp:
     def __init__(self):
         """Initialize the application."""
         self.config = load_config()
+        print(f"🔧 Loaded config - audio_device_index: {self.config.audio_device_index}")
         self.terminal = TerminalInterface()
         self.transcriber: Optional[FasterWhisperTranscriber] = None
         self.recorder: Optional[AudioRecorder] = None
-        self.hotkey_handler: Optional[DoubleCtrlHotkeyHandler] = None
+        self.hotkey_handler: Optional[AlternativeHotkeyHandler] = None
         self.is_recording = False
         self.is_running = False
         
@@ -70,10 +71,10 @@ class SpeechToTextApp:
             except Exception as e:
                 self.terminal.show_error(f"Audio device warning: {e}")
             
-            # Initialize hotkey handler
-            self.hotkey_handler = DoubleCtrlHotkeyHandler(
+            # Initialize hotkey handler with Ctrl+Shift+Space
+            self.hotkey_handler = AlternativeHotkeyHandler(
                 callback=self.toggle_recording,
-                timeout=0.5
+                hotkey="ctrl+shift+space"
             )
             
             self.terminal.show_status("✅ All components initialized successfully!", "green")
@@ -104,7 +105,8 @@ class SpeechToTextApp:
         
         try:
             self.terminal.show_recording_start()
-            success = self.recorder.start_recording()
+            print(f"🔧 Config audio_device_index: {self.config.audio_device_index}")
+            success = self.recorder.start_recording(device_index=self.config.audio_device_index)
             
             if success:
                 self.is_recording = True

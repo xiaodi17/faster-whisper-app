@@ -74,6 +74,7 @@ class DoubleCtrlHotkeyHandler:
         if self.last_ctrl_time is None:
             # First Ctrl press
             self.last_ctrl_time = current_time
+            print("🎹 First Ctrl press detected")
             logger.debug("First Ctrl press detected")
         else:
             # Check if this is within the timeout window
@@ -89,6 +90,7 @@ class DoubleCtrlHotkeyHandler:
             else:
                 # Too slow, reset
                 self.last_ctrl_time = current_time
+                print(f"🎹 Ctrl press too slow ({time_diff:.2f}s), resetting")
                 logger.debug("Ctrl press too slow, resetting")
     
     def _safe_callback(self) -> None:

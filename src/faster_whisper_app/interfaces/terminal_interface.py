@@ -48,9 +48,9 @@ class TerminalInterface:
         instructions.add_column(style="cyan")
         instructions.add_column(style="white")
         
-        instructions.add_row("🎹", "Double-tap Ctrl to start/stop recording")
+        instructions.add_row("🎹", "Press Ctrl+Shift+Space to start/stop recording")
         instructions.add_row("🔊", "Speak clearly into your microphone")
-        instructions.add_row("⏹️", "Double-tap Ctrl again to transcribe")
+        instructions.add_row("⏹️", "Press Ctrl+Shift+Space again to transcribe")
         instructions.add_row("❌", "Ctrl+C to exit")
         
         self.console.print()
@@ -246,7 +246,7 @@ class TerminalInterface:
         """Show waiting for input message."""
         waiting_text = Text.assemble(
             ("⏳ ", "yellow"),
-            ("Ready - Double-tap Ctrl to start recording", "white")
+            ("Ready - Press Ctrl+Shift+Space to start recording", "white")
         )
         
         self.console.print(waiting_text)
