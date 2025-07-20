@@ -104,7 +104,7 @@ class DoubleCtrlHotkeyHandler:
 class AlternativeHotkeyHandler:
     """Alternative hotkey handler using traditional key combinations."""
     
-    def __init__(self, callback: Callable[[], None], hotkey: str = "ctrl+shift+space"):
+    def __init__(self, callback: Callable[[], None], hotkey: str = "f1"):
         """Initialize with a traditional hotkey combination.
         
         Args:
@@ -155,6 +155,7 @@ class AlternativeHotkeyHandler:
         try:
             self.callback()
         except Exception as e:
+            print(f"❌ Error in hotkey callback: {e}")
             logger.error(f"Error in hotkey callback: {e}")
 
 

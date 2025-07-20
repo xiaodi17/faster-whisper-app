@@ -7,12 +7,7 @@ from typing import Optional
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-import os
-print(f"🔧 Current working directory: {os.getcwd()}")
-print(f"🔧 Looking for .env at: {os.path.join(os.getcwd(), '.env')}")
-print(f"🔧 .env exists: {os.path.exists('.env')}")
 load_dotenv()
-print(f"🔧 AUDIO_DEVICE_INDEX from env: {os.getenv('AUDIO_DEVICE_INDEX')}")
 
 
 @dataclass

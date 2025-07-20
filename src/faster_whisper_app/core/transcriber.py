@@ -83,6 +83,10 @@ class FasterWhisperTranscriber:
             language = info.language
             language_probability = info.language_probability
             
+            print(f"🔍 Debug - info type: {type(info)}")
+            print(f"🔍 Debug - language type: {type(language)}, value: {repr(language)}")
+            print(f"🔍 Debug - probability type: {type(language_probability)}, value: {repr(language_probability)}")
+            
             logger.info(f"Detected language '{language}' with probability {language_probability:.2f}")
             
             # Collect all segments into full text
@@ -90,6 +94,9 @@ class FasterWhisperTranscriber:
             full_text_parts = []
             
             for segment in segments:
+                print(f"🔍 Debug - segment type: {type(segment)}")
+                print(f"🔍 Debug - segment.text type: {type(segment.text)}, value: {repr(segment.text)}")
+                
                 segment_data = {
                     "start": segment.start,
                     "end": segment.end,

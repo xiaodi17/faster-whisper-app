@@ -26,7 +26,6 @@ class SpeechToTextApp:
     def __init__(self):
         """Initialize the application."""
         self.config = load_config()
-        print(f"🔧 Loaded config - audio_device_index: {self.config.audio_device_index}")
         self.terminal = TerminalInterface()
         self.transcriber: Optional[FasterWhisperTranscriber] = None
         self.recorder: Optional[AudioRecorder] = None
@@ -66,15 +65,34 @@ class SpeechToTextApp:
             
             # Show device info
             try:
-                device_info = self.recorder.get_default_input_device()
-                self.terminal.show_device_info(device_info)
+                if self.config.audio_device_index is not None:
+                    # Show configured device - need to initialize PyAudio first
+                    devices = self.recorder.list_audio_devices()
+                    configured_device = None
+                    for device in devices:
+                        if device['index'] == self.config.audio_device_index:
+                            configured_device = device
+                            break
+                    
+                    if configured_device:
+                        self.terminal.show_device_info(configured_device)
+                        print(f"🎤 Configured to use device {self.config.audio_device_index}: {configured_device['name']}")
+                    else:
+                        self.terminal.show_error(f"Configured device {self.config.audio_device_index} not found!")
+                        device_info = self.recorder.get_default_input_device()
+                        self.terminal.show_device_info(device_info)
+                else:
+                    # Show default device
+                    device_info = self.recorder.get_default_input_device()
+                    self.terminal.show_device_info(device_info)
+                    print(f"🎤 Using default device: {device_info['name']}")
             except Exception as e:
                 self.terminal.show_error(f"Audio device warning: {e}")
             
-            # Initialize hotkey handler with Ctrl+Shift+Space
+            # Initialize hotkey handler with F1 (simpler key, less permission issues)
             self.hotkey_handler = AlternativeHotkeyHandler(
                 callback=self.toggle_recording,
-                hotkey="ctrl+shift+space"
+                hotkey="f1"
             )
             
             self.terminal.show_status("✅ All components initialized successfully!", "green")
@@ -105,7 +123,6 @@ class SpeechToTextApp:
         
         try:
             self.terminal.show_recording_start()
-            print(f"🔧 Config audio_device_index: {self.config.audio_device_index}")
             success = self.recorder.start_recording(device_index=self.config.audio_device_index)
             
             if success:
@@ -131,12 +148,22 @@ class SpeechToTextApp:
             self.is_recording = False
             
             if audio_data:
-                # Show processing spinner
-                with self.terminal.show_processing_with_spinner():
-                    result = self.transcriber.transcribe_audio_data(
-                        audio_data,
-                        sample_rate=self.config.sample_rate
-                    )
+                # Show processing message (no spinner for debugging)
+                print("🔍 About to start transcription...")
+                self.terminal.show_status("🤖 Processing audio...", "yellow")
+                
+                print("🔍 Calling transcribe_audio_data...")
+                result = self.transcriber.transcribe_audio_data(
+                    audio_data,
+                    sample_rate=self.config.sample_rate
+                )
+                print("🔍 Transcription completed, result received")
+                
+                # Debug the result before displaying
+                print(f"🔍 Transcription result type: {type(result)}")
+                print(f"🔍 Transcription result keys: {list(result.keys()) if isinstance(result, dict) else 'not a dict'}")
+                if isinstance(result, dict) and 'text' in result:
+                    print(f"🔍 Text type: {type(result['text'])}, value: {repr(result['text'])}")
                 
                 # Show result
                 self.terminal.show_transcription_result(result)

@@ -48,9 +48,9 @@ class TerminalInterface:
         instructions.add_column(style="cyan")
         instructions.add_column(style="white")
         
-        instructions.add_row("🎹", "Press Ctrl+Shift+Space to start/stop recording")
+        instructions.add_row("🎹", "Press F1 to start/stop recording")
         instructions.add_row("🔊", "Speak clearly into your microphone")
-        instructions.add_row("⏹️", "Press Ctrl+Shift+Space again to transcribe")
+        instructions.add_row("⏹️", "Press F1 again to transcribe")
         instructions.add_row("❌", "Ctrl+C to exit")
         
         self.console.print()
@@ -126,6 +126,16 @@ class TerminalInterface:
         language = result.get("language", "unknown")
         confidence = result.get("language_probability", 0.0)
         model = result.get("model", "unknown")
+        
+        # Debug: Check what we got
+        print(f"🔍 Debug - result type: {type(result)}")
+        print(f"🔍 Debug - text type: {type(text)}, value: {repr(text)}")
+        print(f"🔍 Debug - language type: {type(language)}, value: {repr(language)}")
+        
+        # Ensure all values are strings
+        text = str(text) if text is not None else ""
+        language = str(language) if language is not None else "unknown"
+        model = str(model) if model is not None else "unknown"
         
         if not text:
             self.console.print("🔇 No speech detected", style="yellow")
@@ -246,7 +256,7 @@ class TerminalInterface:
         """Show waiting for input message."""
         waiting_text = Text.assemble(
             ("⏳ ", "yellow"),
-            ("Ready - Press Ctrl+Shift+Space to start recording", "white")
+            ("Ready - Press F1 to start recording", "white")
         )
         
         self.console.print(waiting_text)
