@@ -148,22 +148,13 @@ class SpeechToTextApp:
             self.is_recording = False
             
             if audio_data:
-                # Show processing message (no spinner for debugging)
-                print("🔍 About to start transcription...")
+                # Show processing message
                 self.terminal.show_status("🤖 Processing audio...", "yellow")
                 
-                print("🔍 Calling transcribe_audio_data...")
                 result = self.transcriber.transcribe_audio_data(
                     audio_data,
                     sample_rate=self.config.sample_rate
                 )
-                print("🔍 Transcription completed, result received")
-                
-                # Debug the result before displaying
-                print(f"🔍 Transcription result type: {type(result)}")
-                print(f"🔍 Transcription result keys: {list(result.keys()) if isinstance(result, dict) else 'not a dict'}")
-                if isinstance(result, dict) and 'text' in result:
-                    print(f"🔍 Text type: {type(result['text'])}, value: {repr(result['text'])}")
                 
                 # Show result
                 self.terminal.show_transcription_result(result)

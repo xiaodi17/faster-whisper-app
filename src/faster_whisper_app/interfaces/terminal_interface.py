@@ -127,16 +127,6 @@ class TerminalInterface:
         confidence = result.get("language_probability", 0.0)
         model = result.get("model", "unknown")
         
-        # Debug: Check what we got
-        print(f"🔍 Debug - result type: {type(result)}")
-        print(f"🔍 Debug - text type: {type(text)}, value: {repr(text)}")
-        print(f"🔍 Debug - language type: {type(language)}, value: {repr(language)}")
-        
-        # Ensure all values are strings
-        text = str(text) if text is not None else ""
-        language = str(language) if language is not None else "unknown"
-        model = str(model) if model is not None else "unknown"
-        
         if not text:
             self.console.print("🔇 No speech detected", style="yellow")
             return
