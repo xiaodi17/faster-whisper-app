@@ -67,6 +67,7 @@ cp .env.example .env
 ```
 
 Available settings:
+
 - `FASTER_WHISPER_MODEL_SIZE`: tiny, base, small, medium, large (default: base)
 - `FASTER_WHISPER_DEVICE`: cpu, cuda (default: cpu)
 - `HOTKEY`: Global hotkey combination (default: ctrl+space)
@@ -77,18 +78,21 @@ Available settings:
 ### PyAudio Installation Issues
 
 **macOS:**
+
 ```bash
 brew install portaudio
 pip install pyaudio
 ```
 
 **Ubuntu/Debian:**
+
 ```bash
 sudo apt install portaudio19-dev
 pip install pyaudio
 ```
 
 **Windows:**
+
 ```bash
 pip install pipwin
 pipwin install pyaudio
@@ -99,6 +103,7 @@ pipwin install pyaudio
 **macOS:** Grant microphone access in System Preferences → Security & Privacy → Privacy → Microphone
 
 **Linux:** Add user to audio group:
+
 ```bash
 sudo usermod -a -G audio $USER
 ```
@@ -138,6 +143,10 @@ faster-whisper-app/
 - Python 3.8+
 - Microphone access
 - ~500MB disk space (for base model)
+
+## run in background mode
+
+sudo bash -c "source venv/bin/activate && PYTHONPATH=src python -m faster_whisper_app"
 
 ## License
 
