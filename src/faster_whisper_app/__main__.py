@@ -159,6 +159,9 @@ class SpeechToTextApp:
                 # Show result
                 self.terminal.show_transcription_result(result)
                 
+                # Type the text into the currently selected text field
+                self._type_to_active_app(result)
+                
             else:
                 self.terminal.show_error("No audio data captured")
                 
@@ -169,6 +172,35 @@ class SpeechToTextApp:
         
         # Show ready message
         self.terminal.show_waiting_for_input()
+    
+    def _type_to_active_app(self, result: dict):
+        """Type the transcribed text into the currently active text field."""
+        import subprocess
+        import time
+        
+        text = result.get('text', '').strip()
+        if not text:
+            return
+        
+        try:
+            # Small delay to ensure the app is ready
+            time.sleep(0.1)
+            
+            # Use AppleScript to type the text into the active application
+            applescript = f'''
+            tell application "System Events"
+                keystroke "{text}"
+            end tell
+            '''
+            
+            # Execute the AppleScript
+            subprocess.run(['osascript', '-e', applescript], check=True)
+            
+            print(f"✅ Typed to active app: {text[:50]}{'...' if len(text) > 50 else ''}")
+            
+        except Exception as e:
+            print(f"❌ Failed to type to active app: {e}")
+            logger.error(f"Failed to type to active app: {e}")
     
     def run(self) -> None:
         """Run the main application."""
