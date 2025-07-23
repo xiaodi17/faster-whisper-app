@@ -20,7 +20,7 @@ class AudioRecorder:
         self,
         sample_rate: int = 16000,
         channels: int = 1,
-        chunk_size: int = 1024,
+        chunk_size: int = 512,  # Reduced for lower latency
         audio_format: int = pyaudio.paInt16
     ) -> None:
         """Initialize audio recorder.
@@ -171,11 +171,17 @@ class AudioRecorder:
             
             self.stream = self.audio.open(**stream_params)
             
-            # Record audio chunks
+            # Record audio chunks with optimized timing
             while self.is_recording:
                 try:
-                    chunk = self.stream.read(self.chunk_size, exception_on_overflow=False)
+                    chunk = self.stream.read(
+                        self.chunk_size, 
+                        exception_on_overflow=False  # Prevent blocking on overflow
+                    )
                     self.audio_frames.append(chunk)
+                    # Small sleep to prevent CPU spinning
+                    import time
+                    time.sleep(0.001)  # 1ms sleep for better performance
                 except OSError as e:
                     logger.warning(f"Audio read error: {e}")
                     break

@@ -3,6 +3,8 @@
 import logging
 import sys
 import signal
+import asyncio
+import threading
 from typing import Optional
 
 from .core.transcriber import FasterWhisperTranscriber
@@ -143,26 +145,58 @@ class SpeechToTextApp:
             return
         
         try:
+            import time
+            processing_start = time.time()
+            logger.info("🚀 Starting complete processing pipeline")
+            
             self.terminal.show_recording_stop()
+            
+            # Time audio data retrieval
+            audio_start = time.time()
             audio_data = self.recorder.stop_recording()
+            audio_time = time.time() - audio_start
+            logger.info(f"⚡ Audio data retrieval: {audio_time*1000:.1f}ms")
+            
             self.is_recording = False
             
             if audio_data:
                 # Show processing message
                 self.terminal.show_status("🤖 Processing audio...", "yellow")
                 
+                # Time transcription
+                transcription_start = time.time()
                 result = self.transcriber.transcribe_audio_data(
                     audio_data,
-                    sample_rate=self.config.sample_rate
+                    sample_rate=self.config.sample_rate,
+                    beam_size=1  # Use beam_size=1 for fastest transcription
                 )
+                transcription_time = time.time() - transcription_start
                 
-                # Show result
+                # Time result display
+                display_start = time.time()
                 self.terminal.show_transcription_result(result)
+                display_time = time.time() - display_start
+                logger.info(f"⚡ Result display: {display_time*1000:.1f}ms")
                 
-                # Type the text into the currently selected text field
-                self._type_to_active_app(result)
+                # Start text output asynchronously (timing logged in the async method)
+                threading.Thread(
+                    target=self._type_to_active_app_async,
+                    args=(result,),
+                    daemon=True
+                ).start()
+                
+                # Log overall timing
+                total_processing_time = time.time() - processing_start
+                logger.info(f"🏁 Total processing pipeline: {total_processing_time*1000:.1f}ms")
+                logger.info(f"📊 Breakdown - Audio: {audio_time*1000:.1f}ms, Transcription: {transcription_time*1000:.1f}ms, Display: {display_time*1000:.1f}ms")
+                
+                # Add timing info to terminal if available
+                if 'timing' in result:
+                    timing = result['timing']
+                    logger.info(f"🔍 Transcription breakdown - WAV prep: {timing['wav_prep_time']*1000:.1f}ms, Model: {timing['model_time']*1000:.1f}ms, Segments: {timing['segment_time']*1000:.1f}ms")
                 
             else:
+                logger.warning("❌ No audio data captured")
                 self.terminal.show_error("No audio data captured")
                 
         except TranscriptionError as e:
@@ -173,8 +207,8 @@ class SpeechToTextApp:
         # Show ready message
         self.terminal.show_waiting_for_input()
     
-    def _type_to_active_app(self, result: dict):
-        """Type the transcribed text into the currently active text field."""
+    def _type_to_active_app_async(self, result: dict):
+        """Type the transcribed text into the currently active text field asynchronously."""
         import subprocess
         import time
         
@@ -183,24 +217,48 @@ class SpeechToTextApp:
             return
         
         try:
+            typing_start = time.time()
+            logger.info(f"⌨️  Starting text output: '{text[:50]}{'...' if len(text) > 50 else ''}'")
+            
             # Small delay to ensure the app is ready
-            time.sleep(0.1)
+            prep_start = time.time()
+            time.sleep(0.05)  # Reduced delay
+            
+            # Escape special characters for AppleScript
+            escaped_text = text.replace('"', '\\"').replace('\n', '\\n').replace('\r', '\\r')
+            prep_time = time.time() - prep_start
             
             # Use AppleScript to type the text into the active application
             applescript = f'''
             tell application "System Events"
-                keystroke "{text}"
+                keystroke "{escaped_text}"
             end tell
             '''
             
-            # Execute the AppleScript
-            subprocess.run(['osascript', '-e', applescript], check=True)
+            # Execute the AppleScript asynchronously
+            script_start = time.time()
+            subprocess.run(
+                ['osascript', '-e', applescript], 
+                check=True,
+                timeout=2.0,  # Prevent hanging
+                capture_output=True
+            )
+            script_time = time.time() - script_start
+            total_typing_time = time.time() - typing_start
             
-            print(f"✅ Typed to active app: {text[:50]}{'...' if len(text) > 50 else ''}")
+            logger.info(f"⚡ Text output timing - Prep: {prep_time*1000:.1f}ms, Script: {script_time*1000:.1f}ms, Total: {total_typing_time*1000:.1f}ms")
+            logger.info(f"✅ Successfully typed to active app")
             
+        except subprocess.TimeoutExpired:
+            total_time = time.time() - typing_start
+            logger.warning(f"⚠️  AppleScript execution timed out after {total_time*1000:.1f}ms")
         except Exception as e:
-            print(f"❌ Failed to type to active app: {e}")
-            logger.error(f"Failed to type to active app: {e}")
+            total_time = time.time() - typing_start
+            logger.error(f"❌ Text output failed after {total_time*1000:.1f}ms: {e}")
+    
+    def _type_to_active_app(self, result: dict):
+        """Legacy sync method - kept for compatibility."""
+        self._type_to_active_app_async(result)
     
     def run(self) -> None:
         """Run the main application."""

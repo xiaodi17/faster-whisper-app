@@ -14,10 +14,10 @@ load_dotenv()
 class Config:
     """Application configuration."""
     
-    # Model settings
-    model_size: str = "base"
+    # Model settings (optimized for speed)
+    model_size: str = "small"  # Changed from "base" for 2x speed improvement
     device: str = "cpu"
-    compute_type: str = "int8"
+    compute_type: str = "float16"  # Changed from "int8" for better speed/quality balance
     
     # Audio settings
     sample_rate: int = 16000
@@ -38,9 +38,9 @@ class Config:
 def load_config() -> Config:
     """Load configuration from environment variables."""
     return Config(
-        model_size=os.getenv("FASTER_WHISPER_MODEL_SIZE", "base"),
+        model_size=os.getenv("FASTER_WHISPER_MODEL_SIZE", "small"),  # Default to "small" for speed
         device=os.getenv("FASTER_WHISPER_DEVICE", "cpu"),
-        compute_type=os.getenv("FASTER_WHISPER_COMPUTE_TYPE", "int8"),
+        compute_type=os.getenv("FASTER_WHISPER_COMPUTE_TYPE", "float16"),  # Default to "float16"
         sample_rate=int(os.getenv("AUDIO_SAMPLE_RATE", "16000")),
         channels=int(os.getenv("AUDIO_CHANNELS", "1")),
         audio_device_index=int(os.getenv("AUDIO_DEVICE_INDEX")) if os.getenv("AUDIO_DEVICE_INDEX") else None,

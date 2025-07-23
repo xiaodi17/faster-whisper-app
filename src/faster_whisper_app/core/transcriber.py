@@ -123,42 +123,104 @@ class FasterWhisperTranscriber:
         self, 
         audio_data: bytes, 
         sample_rate: int = 16000,
-        beam_size: int = 5
+        beam_size: int = 1
     ) -> Dict[str, Any]:
-        """Transcribe raw audio data.
+        """Transcribe raw audio data directly without temp files.
         
         Args:
             audio_data: Raw audio bytes
             sample_rate: Audio sample rate
-            beam_size: Beam size for transcription
+            beam_size: Beam size for transcription (1 for speed, 5 for accuracy)
             
         Returns:
             Dictionary with transcription results
         """
-        import tempfile
+        import io
         import wave
         
-        # Create temporary WAV file
-        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_file:
-            temp_path = temp_file.name
+        if not self.model:
+            raise TranscriptionError("Model not loaded")
+        
+        if not audio_data:
+            raise TranscriptionError("No audio data provided")
         
         try:
-            # Save audio data as WAV file
-            with wave.open(temp_path, 'wb') as wav_file:
+            import time
+            transcription_start = time.time()
+            
+            logger.info(f"🎯 Starting transcription of {len(audio_data)} bytes of audio data")
+            
+            # Time WAV file creation
+            wav_start = time.time()
+            wav_buffer = io.BytesIO()
+            with wave.open(wav_buffer, 'wb') as wav_file:
                 wav_file.setnchannels(1)  # Mono
                 wav_file.setsampwidth(2)  # 16-bit
                 wav_file.setframerate(sample_rate)
                 wav_file.writeframes(audio_data)
             
-            # Transcribe the temporary file
-            return self.transcribe_file(temp_path, beam_size)
+            # Reset buffer position for reading
+            wav_buffer.seek(0)
+            wav_prep_time = time.time() - wav_start
+            logger.info(f"⚡ WAV preparation: {wav_prep_time*1000:.1f}ms")
             
-        finally:
-            # Clean up temporary file
-            try:
-                os.unlink(temp_path)
-            except OSError:
-                pass
+            # Time the actual transcription
+            model_start = time.time()
+            segments, info = self.model.transcribe(wav_buffer, beam_size=beam_size)
+            model_time = time.time() - model_start
+            logger.info(f"⚡ Model transcription: {model_time*1000:.1f}ms")
+            
+            # Extract language info
+            language = info.language
+            language_probability = info.language_probability
+            
+            logger.info(f"Detected language '{language}' with probability {language_probability:.2f}")
+            
+            # Time segment processing
+            segment_start = time.time()
+            segment_list = []
+            full_text_parts = []
+            
+            for segment in segments:
+                segment_data = {
+                    "start": segment.start,
+                    "end": segment.end,
+                    "text": segment.text
+                }
+                segment_list.append(segment_data)
+                full_text_parts.append(segment.text)
+                
+                # Log each segment
+                logger.debug(f"[{segment.start:.2f}s -> {segment.end:.2f}s] {segment.text}")
+            
+            full_text = " ".join(full_text_parts).strip()
+            segment_time = time.time() - segment_start
+            logger.info(f"⚡ Segment processing: {segment_time*1000:.1f}ms")
+            
+            total_time = time.time() - transcription_start
+            
+            result = {
+                "text": full_text,
+                "language": language,
+                "language_probability": language_probability,
+                "segments": segment_list,
+                "model": self.model_size,
+                "timing": {
+                    "wav_prep_time": wav_prep_time,
+                    "model_time": model_time,
+                    "segment_time": segment_time,
+                    "total_time": total_time
+                }
+            }
+            
+            logger.info(f"🏁 Total transcription time: {total_time*1000:.1f}ms")
+            logger.info(f"📝 Result: '{full_text[:100]}{'...' if len(full_text) > 100 else ''}'")
+            return result
+            
+        except Exception as e:
+            error_msg = f"Transcription failed: {e}"
+            logger.error(error_msg)
+            raise TranscriptionError(error_msg)
     
     def get_model_info(self) -> Dict[str, Any]:
         """Get information about the loaded model."""
