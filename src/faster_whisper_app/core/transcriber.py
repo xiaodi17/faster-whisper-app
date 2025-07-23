@@ -164,9 +164,18 @@ class FasterWhisperTranscriber:
             wav_prep_time = time.time() - wav_start
             logger.info(f"⚡ WAV preparation: {wav_prep_time*1000:.1f}ms")
             
-            # Time the actual transcription
+            # Time the actual transcription with aggressive speed optimizations
             model_start = time.time()
-            segments, info = self.model.transcribe(wav_buffer, beam_size=beam_size)
+            segments, info = self.model.transcribe(
+                wav_buffer, 
+                beam_size=beam_size,
+                best_of=1,                        # Single candidate for speed
+                temperature=0.0,                  # Deterministic output (faster)
+                condition_on_previous_text=False, # No context dependency (faster)
+                word_timestamps=False,            # Skip word-level timestamps (faster)
+                vad_filter=False,                 # Skip voice activity detection (faster)
+                patience=1.0                      # Fast beam search termination
+            )
             model_time = time.time() - model_start
             logger.info(f"⚡ Model transcription: {model_time*1000:.1f}ms")
             
