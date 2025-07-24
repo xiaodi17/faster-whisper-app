@@ -77,7 +77,24 @@ make test
 
 # Start app
 make start
+
+# Build standalone executable for distribution
+make build-exe
 ```
+
+### Building Executables
+
+Create standalone executables that users can run without installing Python:
+
+```bash
+# Build executable for current platform
+make build-exe
+
+# Creates: dist/Voice-to-Text-{platform}-{arch}
+# Users just run: ./Voice-to-Text-{platform}-{arch}
+```
+
+**Note:** You must build on each target platform (build on Mac → macOS executable, build on Windows → Windows executable).
 
 ## Requirements
 

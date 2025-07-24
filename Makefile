@@ -105,6 +105,7 @@ clean: ## Clean build artifacts and cache
 	rm -rf build/
 	rm -rf dist/
 	rm -rf *.egg-info/
+	rm -rf *.spec
 	rm -rf .pytest_cache/
 	rm -rf .mypy_cache/
 	rm -rf .ruff_cache/
@@ -115,6 +116,20 @@ clean: ## Clean build artifacts and cache
 build: ## Build distributable package
 	python -m build
 	@echo "📦 Package built in dist/"
+
+build-exe: ## Build standalone executable with PyInstaller
+	@if command -v uv >/dev/null 2>&1; then \
+		uv run python build.py; \
+	else \
+		python build.py; \
+	fi
+
+clean-build: ## Clean PyInstaller build artifacts
+	@if command -v uv >/dev/null 2>&1; then \
+		uv run python build.py clean; \
+	else \
+		python build.py clean; \
+	fi
 
 # Configuration and info
 config: ## Show current configuration

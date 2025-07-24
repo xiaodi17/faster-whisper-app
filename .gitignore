@@ -61,3 +61,8 @@ htmlcov/
 
 # MyPy
 .mypy_cache/
+
+# PyInstaller
+*.spec
+build/
+dist/
