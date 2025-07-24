@@ -46,8 +46,10 @@ install-uv: ## Install the project using uv (recommended)
 
 # Development commands
 start: ## Start the application
-	@if command -v faster-whisper-app >/dev/null 2>&1; then \
-		faster-whisper-app; \
+	@if command -v uv >/dev/null 2>&1; then \
+		uv run faster-whisper-app run; \
+	elif command -v faster-whisper-app >/dev/null 2>&1; then \
+		faster-whisper-app run; \
 	else \
 		python -m faster_whisper_app; \
 	fi
@@ -56,7 +58,11 @@ dev: format lint test start ## Run full development workflow
 
 # Testing commands
 test: ## Run all tests
-	pytest tests/ -v
+	@if command -v uv >/dev/null 2>&1; then \
+		uv run pytest tests/ -v; \
+	else \
+		pytest tests/ -v; \
+	fi
 
 test-fast: ## Run tests until first failure
 	pytest tests/ -x
@@ -67,14 +73,25 @@ test-cov: ## Run tests with coverage report
 
 # Code quality commands
 format: ## Format code with black, isort, and ruff
-	black src/ tests/
-	isort src/ tests/
-	ruff format src/ tests/
+	@if command -v uv >/dev/null 2>&1; then \
+		uv run black src/ tests/; \
+		uv run isort src/ tests/; \
+		uv run ruff format src/ tests/; \
+	else \
+		black src/ tests/; \
+		isort src/ tests/; \
+		ruff format src/ tests/; \
+	fi
 	@echo "✨ Code formatted"
 
 lint: ## Lint code with ruff and mypy
-	ruff check src/ tests/
-	mypy src/
+	@if command -v uv >/dev/null 2>&1; then \
+		uv run ruff check src/ tests/; \
+		uv run mypy src/; \
+	else \
+		ruff check src/ tests/; \
+		mypy src/; \
+	fi
 	@echo "🔍 Linting complete"
 
 fix: ## Auto-fix linting issues
