@@ -5,10 +5,12 @@ Based on the SYSTRAN/faster-whisper repository example:
 https://github.com/SYSTRAN/faster-whisper
 """
 
+import io
 import logging
 import os
+import time
+import wave
 from typing import Dict, Any, List, Optional
-from pathlib import Path
 
 from faster_whisper import WhisperModel
 
@@ -135,8 +137,6 @@ class FasterWhisperTranscriber:
         Returns:
             Dictionary with transcription results
         """
-        import io
-        import wave
         
         if not self.model:
             raise TranscriptionError("Model not loaded")
@@ -145,7 +145,6 @@ class FasterWhisperTranscriber:
             raise TranscriptionError("No audio data provided")
         
         try:
-            import time
             transcription_start = time.time()
             
             logger.info(f"🎯 Starting transcription of {len(audio_data)} bytes of audio data")
@@ -239,29 +238,3 @@ class FasterWhisperTranscriber:
             "compute_type": self.compute_type,
             "is_loaded": self.model is not None
         }
-
-
-# Simple test function following their example pattern
-def test_transcriber():
-    """Test the transcriber with a simple example."""
-    try:
-        # Initialize transcriber
-        transcriber = FasterWhisperTranscriber("tiny")  # Use tiny for quick testing
-        
-        print("✅ Transcriber initialized successfully")
-        print(f"Model info: {transcriber.get_model_info()}")
-        
-        # You would test with an actual audio file like:
-        # result = transcriber.transcribe_file("test_audio.wav")
-        # print(f"Transcription: {result['text']}")
-        
-        return True
-        
-    except Exception as e:
-        print(f"❌ Transcriber test failed: {e}")
-        return False
-
-
-if __name__ == "__main__":
-    # Test the transcriber
-    test_transcriber()
