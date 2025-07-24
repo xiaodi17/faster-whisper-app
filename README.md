@@ -2,10 +2,22 @@
 
 A simple speech-to-text application using SYSTRAN's faster-whisper that responds to global hotkeys and outputs transcriptions to both terminal and browser simultaneously.
 
+## Project Structure
+
+```
+faster-whisper-app/
+├── src/faster_whisper_app/
+│   ├── core/                 # Core transcription engine
+│   ├── interfaces/           # Terminal, web, hotkey interfaces
+│   └── config.py            # Configuration management
+├── tests/                   # Test suite
+├── requirements.txt         # Dependencies
+└── setup.sh               # Quick setup script
+```
+
 ## Features
 
 - 🎙️ **Global Hotkey**: Press `F1` to start/stop recording from anywhere
-- 🖥️ **Dual Output**: Transcriptions appear in both terminal and web browser
 - ⚡ **Fast Processing**: Uses optimized faster-whisper for quick transcription
 - 🌍 **Multi-language**: Automatic language detection
 - 🎯 **Simple Setup**: One command installation
@@ -146,7 +158,6 @@ Available settings:
 - `FASTER_WHISPER_MODEL_SIZE`: tiny, base, small, medium, large (default: base)
 - `FASTER_WHISPER_DEVICE`: cpu, cuda (default: cpu)
 - `HOTKEY`: Global hotkey combination (default: f1)
-- `WEB_PORT`: Web interface port (default: 8000)
 
 ## Troubleshooting
 
@@ -171,19 +182,6 @@ pip install pyaudio
 ```bash
 pip install pipwin
 pipwin install pyaudio
-```
-
-## Project Structure
-
-```
-faster-whisper-app/
-├── src/faster_whisper_app/
-│   ├── core/                 # Core transcription engine
-│   ├── interfaces/           # Terminal, web, hotkey interfaces
-│   └── config.py            # Configuration management
-├── tests/                   # Test suite
-├── requirements.txt         # Dependencies
-└── setup.sh               # Quick setup script
 ```
 
 ## Requirements
