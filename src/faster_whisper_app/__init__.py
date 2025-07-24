@@ -2,7 +2,7 @@
 Faster-Whisper Global Hotkey Speech-to-Text App
 
 A simple speech-to-text application that responds to global hotkeys
-and outputs transcriptions to both terminal and browser simultaneously.
+and types transcriptions directly into active applications.
 """
 
 __version__ = "0.1.0"
