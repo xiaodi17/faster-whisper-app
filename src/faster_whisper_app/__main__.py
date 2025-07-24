@@ -10,7 +10,7 @@ from typing import Optional
 from .core.transcriber import FasterWhisperTranscriber
 from .core.recorder import AudioRecorder
 from .core.exceptions import TranscriptionError, AudioRecordingError, ModelLoadError
-from .interfaces.hotkey_handler import AlternativeHotkeyHandler
+from .interfaces.hotkey_handler import HotkeyHandler
 from .interfaces.terminal_interface import TerminalInterface
 from .config import load_config
 
@@ -31,7 +31,7 @@ class SpeechToTextApp:
         self.terminal = TerminalInterface()
         self.transcriber: Optional[FasterWhisperTranscriber] = None
         self.recorder: Optional[AudioRecorder] = None
-        self.hotkey_handler: Optional[AlternativeHotkeyHandler] = None
+        self.hotkey_handler: Optional[HotkeyHandler] = None
         self.is_recording = False
         self.is_running = False
         
@@ -92,7 +92,7 @@ class SpeechToTextApp:
                 self.terminal.show_error(f"Audio device warning: {e}")
             
             # Initialize hotkey handler with configurable hotkey from .env
-            self.hotkey_handler = AlternativeHotkeyHandler(
+            self.hotkey_handler = HotkeyHandler(
                 callback=self.toggle_recording,
                 hotkey=self.config.hotkey
             )
