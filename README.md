@@ -10,45 +10,87 @@ A simple speech-to-text application using SYSTRAN's faster-whisper that responds
 - 🌍 **Multi-language**: Automatic language detection
 - 🎯 **Simple Setup**: One command installation
 
-## Quick Setup
+## 🚀 Quick Setup (Recommended - uv)
+
+**One-command setup with uv (fastest and modern):**
 
 ```bash
+# Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
 # Clone and setup everything
 git clone https://github.com/yourusername/faster-whisper-app
 cd faster-whisper-app
-./setup.sh
+
+# Install Python 3.11 + all dependencies + run app
+uv sync && uv run start
 ```
 
-## Manual Setup
+That's it! uv automatically:
+- ✅ Installs Python 3.11 if needed
+- ✅ Creates virtual environment
+- ✅ Installs all dependencies
+- ✅ Runs the application
+
+## 📦 Alternative Setup (Traditional)
+
+**Using pip and virtual environments:**
 
 ```bash
 # Clone repository
 git clone https://github.com/yourusername/faster-whisper-app
 cd faster-whisper-app
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# Ensure Python 3.11+ is installed
+python --version  # Should be 3.11+
 
-# Install dependencies
-pip install -r requirements.txt
-
-# Test installation
-python -m pytest tests/test_setup.py
-```
-
-## Usage
-
-```bash
-# Activate virtual environment
-source venv/bin/activate
+# Install the project
+pip install -e .
 
 # Run the application
+faster-whisper-app
+```
+
+## 🎮 Usage
+
+### **Modern Way (with uv):**
+```bash
+# Start the application
+uv run start
+
+# Run development workflow (format + lint + test + start)
+uv run dev
+
+# Run tests only
+uv run test
+
+# Format and lint code
+uv run format
+uv run lint
+
+# Test individual components
+uv run test-transcriber
+uv run test-recorder
+```
+
+### **Traditional Way:**
+```bash
+# Run the application
+faster-whisper-app
+
+# Or use module syntax
 python -m faster_whisper_app
 
-# Or test individual components
-python src/faster_whisper_app/core/transcriber.py
-python src/faster_whisper_app/core/recorder.py
+# With CLI options
+faster-whisper-app --model-size base --device cpu
+```
+
+### **Available Commands:**
+```bash
+faster-whisper-app run          # Start the app
+faster-whisper-app transcribe   # Transcribe audio file
+faster-whisper-app test         # Test installation
+faster-whisper-app config       # Show configuration
 ```
 
 ## How It Works
