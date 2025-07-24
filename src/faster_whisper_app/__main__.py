@@ -91,10 +91,10 @@ class SpeechToTextApp:
             except Exception as e:
                 self.terminal.show_error(f"Audio device warning: {e}")
             
-            # Initialize hotkey handler with F1 (simpler key, less permission issues)
+            # Initialize hotkey handler with configurable hotkey from .env
             self.hotkey_handler = AlternativeHotkeyHandler(
                 callback=self.toggle_recording,
-                hotkey="f1"
+                hotkey=self.config.hotkey
             )
             
             self.terminal.show_status("✅ All components initialized successfully!", "green")
@@ -205,7 +205,7 @@ class SpeechToTextApp:
             self.terminal.show_error(f"Processing failed: {e}")
         
         # Show ready message
-        self.terminal.show_waiting_for_input()
+        self.terminal.show_waiting_for_input(hotkey=self.config.hotkey)
     
     def _type_to_active_app_async(self, result: dict):
         """Type the transcribed text into the currently active text field asynchronously."""
@@ -263,8 +263,8 @@ class SpeechToTextApp:
     def run(self) -> None:
         """Run the main application."""
         try:
-            # Show startup banner
-            self.terminal.show_startup_banner()
+            # Show startup banner with configured hotkey
+            self.terminal.show_startup_banner(hotkey=self.config.hotkey)
             
             # Initialize components
             if not self.initialize_components():
@@ -280,7 +280,7 @@ class SpeechToTextApp:
                 self.hotkey_handler.start_listening()
                 self.is_running = True
                 
-                self.terminal.show_waiting_for_input()
+                self.terminal.show_waiting_for_input(hotkey=self.config.hotkey)
                 
                 # Keep running until interrupted
                 try:

@@ -27,8 +27,8 @@ class TerminalInterface:
         
         logger.info("Terminal interface initialized")
     
-    def show_startup_banner(self) -> None:
-        """Display startup banner."""
+    def show_startup_banner(self, hotkey: str = "F1") -> None:
+        """Display startup banner with configurable hotkey."""
         banner = Panel(
             Text.assemble(
                 ("🎙️ ", "bold red"),
@@ -48,9 +48,9 @@ class TerminalInterface:
         instructions.add_column(style="cyan")
         instructions.add_column(style="white")
         
-        instructions.add_row("🎹", "Press F1 to start/stop recording")
+        instructions.add_row("🎹", f"Press {hotkey.upper()} to start/stop recording")
         instructions.add_row("🔊", "Speak clearly into your microphone")
-        instructions.add_row("⏹️", "Press F1 again to transcribe")
+        instructions.add_row("⏹️", f"Press {hotkey.upper()} again to transcribe")
         instructions.add_row("❌", "Ctrl+C to exit")
         
         self.console.print()
@@ -242,11 +242,11 @@ class TerminalInterface:
         """Clear the terminal screen."""
         self.console.clear()
     
-    def show_waiting_for_input(self) -> None:
-        """Show waiting for input message."""
+    def show_waiting_for_input(self, hotkey: str = "F1") -> None:
+        """Show waiting for input message with configurable hotkey."""
         waiting_text = Text.assemble(
             ("⏳ ", "yellow"),
-            ("Ready - Press F1 to start recording", "white")
+            (f"Ready - Press {hotkey.upper()} to start recording", "white")
         )
         
         self.console.print(waiting_text)

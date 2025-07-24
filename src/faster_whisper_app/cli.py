@@ -14,7 +14,7 @@ console = Console()
 def cli():
     """Faster-Whisper Global Hotkey Speech-to-Text App
     
-    A simple speech-to-text application that responds to double Ctrl clicks
+    A simple speech-to-text application that responds to F1 hotkey
     and outputs transcriptions to both terminal and browser.
     """
     pass
@@ -31,7 +31,7 @@ def cli():
               type=click.Choice(['int8', 'float16', 'float32']),
               help='Compute precision type')
 def run(model_size, device, compute_type):
-    """Run the speech-to-text application with double Ctrl hotkey."""
+    """Run the speech-to-text application with F1 hotkey."""
     console.print(f"🚀 Starting with model: {model_size} on {device}")
     
     # Override config with CLI options
@@ -77,7 +77,7 @@ def test():
     try:
         from .core.transcriber import FasterWhisperTranscriber
         from .core.recorder import AudioRecorder
-        from .interfaces.hotkey_handler import DoubleCtrlHotkeyHandler
+        from .interfaces.hotkey_handler import AlternativeHotkeyHandler
         console.print("✅ All imports successful")
     except ImportError as e:
         console.print(f"❌ Import error: {e}", style="red")

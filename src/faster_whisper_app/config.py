@@ -29,7 +29,7 @@ class Config:
     web_port: int = 8000
     
     # Global hotkey
-    hotkey: str = "double_ctrl"
+    hotkey: str = "f1"
     
     # Logging
     log_level: str = "INFO"
@@ -46,7 +46,7 @@ def load_config() -> Config:
         audio_device_index=int(os.getenv("AUDIO_DEVICE_INDEX")) if os.getenv("AUDIO_DEVICE_INDEX") else None,
         web_host=os.getenv("WEB_HOST", "localhost"),
         web_port=int(os.getenv("WEB_PORT", "8000")),
-        hotkey=os.getenv("HOTKEY", "double_ctrl"),
+        hotkey=os.getenv("HOTKEY", "f1"),
         log_level=os.getenv("LOG_LEVEL", "INFO"),
     )
 

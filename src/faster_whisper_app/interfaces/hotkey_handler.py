@@ -109,7 +109,7 @@ class AlternativeHotkeyHandler:
         
         Args:
             callback: Function to call when hotkey is pressed
-            hotkey: Hotkey combination (e.g., "ctrl+shift+space")
+            hotkey: Hotkey combination (e.g., "f1")
         """
         self.callback = callback
         self.hotkey = hotkey
@@ -190,11 +190,11 @@ def test_alternative_hotkey():
         print("🎉 Hotkey detected! This would start/stop recording.")
     
     try:
-        handler = AlternativeHotkeyHandler(test_callback, "ctrl+shift+space")
+        handler = AlternativeHotkeyHandler(test_callback, "f1")
         handler.start_listening()
         
         print("Testing alternative hotkey...")
-        print("Try pressing Ctrl+Shift+Space")
+        print("Try pressing F1")
         print("Press Ctrl+C to exit")
         
         # Keep the test running
@@ -212,7 +212,7 @@ def test_alternative_hotkey():
 if __name__ == "__main__":
     print("Choose hotkey test:")
     print("1. Double Ctrl click")
-    print("2. Traditional hotkey (Ctrl+Shift+Space)")
+    print("2. Traditional hotkey (F1)")
     
     choice = input("Enter choice (1 or 2): ").strip()
     

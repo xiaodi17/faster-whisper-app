@@ -4,7 +4,7 @@
 A simple speech-to-text application using faster-whisper that responds to a global hotkey and outputs transcriptions to both terminal and browser simultaneously.
 
 ## Core Concept
-Press `Ctrl+Space` → Record audio → Transcribe with faster-whisper → Display in terminal AND browser
+Press `F1` → Record audio → Transcribe with faster-whisper → Display in terminal AND browser
 
 ## Technology Stack
 - **Speech Recognition**: faster-whisper (SYSTRAN's optimized Whisper)
@@ -94,8 +94,8 @@ class HotkeyHandler:
         self.is_recording = False
         
     def setup_hotkey(self):
-        keyboard.add_hotkey('ctrl+space', self.toggle_recording)
-        print("🎧 Global hotkey registered: Ctrl+Space")
+        keyboard.add_hotkey('f1', self.toggle_recording)
+        print("🎧 Global hotkey registered: F1")
         
     def toggle_recording(self):
         if not self.is_recording:
@@ -179,7 +179,7 @@ class AudioRecorder:
 </head>
 <body>
     <h1>🎙️ Live Transcription</h1>
-    <div id="status">Ready - Press Ctrl+Space to start</div>
+    <div id="status">Ready - Press F1 to start</div>
     <div id="transcriptions"></div>
     
     <script>
@@ -225,9 +225,9 @@ class AudioRecorder:
 
 ### Global Hotkey Workflow
 ```
-1. Press Ctrl+Space    → Start recording (show in terminal + browser)
+1. Press F1    → Start recording (show in terminal + browser)
 2. Speak normally      → Audio capture continues
-3. Press Ctrl+Space    → Stop recording, start transcription
+3. Press F1    → Stop recording, start transcription
 4. Processing          → Show "Processing..." in both outputs
 5. Result              → Display transcription in terminal + browser
 ```
@@ -244,7 +244,7 @@ class AudioRecorder:
 MODEL_SIZE = "base"        # tiny, base, small, medium, large
 DEVICE = "cpu"             # cpu or cuda
 COMPUTE_TYPE = "int8"      # int8, float16, float32
-HOTKEY = "ctrl+space"      # Global hotkey combination
+HOTKEY = "f1"              # Global hotkey combination
 SAMPLE_RATE = 16000        # Audio sample rate
 WEB_PORT = 8000           # Browser interface port
 ```

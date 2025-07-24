@@ -4,7 +4,7 @@ A simple speech-to-text application using SYSTRAN's faster-whisper that responds
 
 ## Features
 
-- 🎙️ **Global Hotkey**: Press `Ctrl+Space` to start/stop recording from anywhere
+- 🎙️ **Global Hotkey**: Press `F1` to start/stop recording from anywhere
 - 🖥️ **Dual Output**: Transcriptions appear in both terminal and web browser
 - ⚡ **Fast Processing**: Uses optimized faster-whisper for quick transcription
 - 🌍 **Multi-language**: Automatic language detection
@@ -127,9 +127,9 @@ faster-whisper-app config       # Show configuration
 
 ## How It Works
 
-1. **Press `Ctrl+Space`** → Start recording
+1. **Press `F1`** → Start recording
 2. **Speak clearly** → Audio is captured
-3. **Press `Ctrl+Space` again** → Stop recording and transcribe
+3. **Press `F1` again** → Stop recording and transcribe
 4. **View results** → See transcription in terminal AND browser
 
 ## Configuration
@@ -144,7 +144,7 @@ Available settings:
 
 - `FASTER_WHISPER_MODEL_SIZE`: tiny, base, small, medium, large (default: base)
 - `FASTER_WHISPER_DEVICE`: cpu, cuda (default: cpu)
-- `HOTKEY`: Global hotkey combination (default: ctrl+space)
+- `HOTKEY`: Global hotkey combination (default: f1)
 - `WEB_PORT`: Web interface port (default: 8000)
 
 ## Troubleshooting
