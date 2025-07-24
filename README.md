@@ -1,14 +1,23 @@
-# Faster-Whisper Global Hotkey Speech-to-Text App
+# Speech-to-Text App
 
-A simple speech-to-text application using SYSTRAN's faster-whisper that responds to global hotkeys and types transcriptions directly into active applications.
+**Press F1, speak, and watch your words instantly appear in any app.**
 
-## Features
+Transform your voice into text across your entire system. Press F1 from anywhere - whether you're in a text editor, browser, or chat app - speak naturally, and your words will be typed directly where your cursor is. No copy-pasting, no switching windows.
 
-- 🎙️ **Global Hotkey**: Press `F1` to start/stop recording from anywhere
-- ⚡ **Fast Processing**: Uses optimized faster-whisper with int8 compute for speed
-- 🌍 **Multi-language**: Automatic language detection
-- ⌨️ **Direct Typing**: Types transcribed text into any active application
-- 🎯 **Simple Setup**: One command installation with uv
+## How It Works
+
+1. **Press F1** → Start recording (works from any application)
+2. **Speak naturally** → Your voice is captured
+3. **Press F1 again** → Voice converts to text and types automatically
+4. **Done!** → Text appears wherever your cursor was
+
+## Why You'll Love It
+
+- 🎙️ **Works everywhere** - Email, documents, chat, code editors, web forms
+- ⚡ **Lightning fast** - Optimized AI transcription in under 2 seconds
+- 🌍 **Speaks your language** - Automatically detects 100+ languages
+- ⌨️ **No interruptions** - Text appears directly where you're typing
+- 🎯 **Easy setup** - Install and run in 30 seconds
 
 ## 🚀 Quick Setup
 
