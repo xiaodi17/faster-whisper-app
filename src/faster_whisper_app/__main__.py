@@ -10,8 +10,7 @@ from typing import Optional
 from .core.transcriber import FasterWhisperTranscriber
 from .core.recorder import AudioRecorder
 from .core.exceptions import TranscriptionError, AudioRecordingError, ModelLoadError
-from .interfaces.hotkey_handler import HotkeyHandler
-from .interfaces.terminal_interface import TerminalInterface
+from .interfaces import HotkeyHandler, TerminalInterface
 from .config import load_config
 
 # Setup logging

@@ -77,7 +77,7 @@ def test():
     try:
         from .core.transcriber import FasterWhisperTranscriber
         from .core.recorder import AudioRecorder
-        from .interfaces.hotkey_handler import HotkeyHandler
+        from .interfaces import HotkeyHandler
         console.print("✅ All imports successful")
     except ImportError as e:
         console.print(f"❌ Import error: {e}", style="red")
