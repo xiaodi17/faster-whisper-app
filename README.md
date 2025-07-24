@@ -1,8 +1,6 @@
 # Speech-to-Text App
 
-**Press F1, speak, and watch your words instantly appear in any app.**
-
-Transform your voice into text across your entire system. Press F1 from anywhere - whether you're in a text editor, browser, or chat app - speak naturally, and your words will be typed directly where your cursor is. No copy-pasting, no switching windows.
+Transform your voice into text across your entire system using SYSTRAN's [faster-whisper](https://github.com/SYSTRAN/faster-whisper) AI. Press F1 from anywhere - whether you're in a text editor, browser, or chat app - speak naturally, and your words will be typed directly where your cursor is. No copy-pasting, no switching windows.
 
 ## How It Works
 
