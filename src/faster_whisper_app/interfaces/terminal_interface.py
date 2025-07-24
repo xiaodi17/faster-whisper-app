@@ -8,9 +8,6 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 from rich.table import Table
-from rich.live import Live
-from rich.spinner import Spinner
-from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich import box
 
 logger = logging.getLogger(__name__)
@@ -51,7 +48,7 @@ class TerminalInterface:
         instructions.add_row("🎹", f"Press {hotkey.upper()} to start/stop recording")
         instructions.add_row("🔊", "Speak clearly into your microphone")
         instructions.add_row("⏹️", f"Press {hotkey.upper()} again to transcribe")
-        instructions.add_row("❌", "Ctrl+C to exit")
+        instructions.add_row("❌", "Press Ctrl+C to exit")
         
         self.console.print()
         self.console.print(Panel(instructions, title="Instructions", border_style="green"))
@@ -92,26 +89,6 @@ class TerminalInterface:
         self.console.print()
         self.console.print(processing_panel)
     
-    def show_processing_with_spinner(self) -> Live:
-        """Show processing spinner and return Live context."""
-        spinner_text = Text.assemble(
-            ("🤖 ", "bold blue"),
-            ("Transcribing audio", "white"),
-            ("...", "dim white")
-        )
-        
-        return Live(
-            Panel(
-                Text.assemble(
-                    (Spinner("dots", style="blue"), ""),
-                    (" ", ""),
-                    spinner_text
-                ),
-                border_style="blue"
-            ),
-            console=self.console,
-            refresh_per_second=4
-        )
     
     def show_transcription_result(self, result: Dict[str, Any]) -> None:
         """Display transcription result with beautiful formatting.
@@ -250,59 +227,3 @@ class TerminalInterface:
         )
         
         self.console.print(waiting_text)
-
-
-def test_terminal_interface():
-    """Test the terminal interface."""
-    interface = TerminalInterface()
-    
-    # Show startup
-    interface.show_startup_banner()
-    
-    # Show device info
-    device_info = {
-        "name": "Built-in Microphone",
-        "channels": 1,
-        "sample_rate": 16000
-    }
-    interface.show_device_info(device_info)
-    
-    # Show model info
-    model_info = {
-        "model_size": "base",
-        "device": "cpu",
-        "compute_type": "int8",
-        "is_loaded": True
-    }
-    interface.show_model_info(model_info)
-    
-    print()
-    input("Press Enter to test recording simulation...")
-    
-    # Simulate recording
-    interface.show_recording_start()
-    time.sleep(2)
-    
-    interface.show_recording_stop()
-    
-    # Show processing with spinner
-    with interface.show_processing_with_spinner():
-        time.sleep(3)
-    
-    # Show result
-    result = {
-        "text": "Hello, this is a test of the speech recognition system. It works great!",
-        "language": "en",
-        "language_probability": 0.95,
-        "model": "base"
-    }
-    interface.show_transcription_result(result)
-    
-    # Show error
-    interface.show_error("This is a test error message")
-    
-    print("✅ Terminal interface test completed!")
-
-
-if __name__ == "__main__":
-    test_terminal_interface()
