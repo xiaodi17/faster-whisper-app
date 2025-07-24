@@ -19,18 +19,21 @@ A simple speech-to-text application using SYSTRAN's faster-whisper that responds
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Clone and setup everything
-git clone https://github.com/yourusername/faster-whisper-app
+git clone https://github.com/xiaodi17/faster-whisper-app
 cd faster-whisper-app
 
-# Install Python 3.11 + all dependencies + run app
-uv sync && uv run start
+# Install Python 3.11 + all dependencies
+uv sync
+
+# Run the application
+uv run python -m faster_whisper_app
 ```
 
 That's it! uv automatically:
+
 - ✅ Installs Python 3.11 if needed
 - ✅ Creates virtual environment
 - ✅ Installs all dependencies
-- ✅ Runs the application
 
 ## 📦 Alternative Setup (Traditional)
 
@@ -38,7 +41,7 @@ That's it! uv automatically:
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/faster-whisper-app
+git clone https://github.com/xiaodi17/faster-whisper-app
 cd faster-whisper-app
 
 # Ensure Python 3.11+ is installed
@@ -53,30 +56,24 @@ faster-whisper-app
 
 ## 🎮 Usage
 
-### **Modern Way (with uv):**
+### **Method 1: Modern Way (with uv)**
+
 ```bash
-# Start the application
-uv run start
+# After running uv sync, start the app
+uv run python -m faster_whisper_app
 
-# Run development workflow (format + lint + test + start)
-uv run dev
-
-# Run tests only
-uv run test
-
-# Format and lint code
-uv run format
-uv run lint
-
-# Test individual components
-uv run test-transcriber
-uv run test-recorder
+# Alternative: if CLI is installed globally
+uv run faster-whisper-app
 ```
 
-### **Traditional Way:**
+### **Method 2: Traditional Way (after pip install)**
+
 ```bash
-# Run the application
+# After pip install -e ., run the global command
 faster-whisper-app
+
+# Or use the short alias
+fwa
 
 # Or use module syntax
 python -m faster_whisper_app
@@ -85,7 +82,42 @@ python -m faster_whisper_app
 faster-whisper-app --model-size base --device cpu
 ```
 
+### **Method 3: Using Makefile (any setup)**
+
+```bash
+make start    # Automatically detects your setup and runs the app
+make help     # Show all available commands
+```
+
+### **Method 4: Direct Python (for development)**
+
+```bash
+# If you have venv activated
+python -m faster_whisper_app
+
+# With specific options
+python -m faster_whisper_app --model-size base --device cpu
+```
+
+## 🛠️ Development Commands
+
+### **Code Quality:**
+```bash
+# Format code
+black src/ tests/
+isort src/ tests/
+ruff format src/ tests/
+
+# Lint code
+ruff check src/ tests/
+mypy src/
+
+# Run tests
+pytest tests/ -v
+```
+
 ### **Available Commands:**
+
 ```bash
 faster-whisper-app run          # Start the app
 faster-whisper-app transcribe   # Transcribe audio file
