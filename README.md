@@ -102,6 +102,7 @@ python -m faster_whisper_app --model-size base --device cpu
 ## 🛠️ Development Commands
 
 ### **Code Quality:**
+
 ```bash
 # Format code
 black src/ tests/
@@ -172,33 +173,6 @@ pip install pipwin
 pipwin install pyaudio
 ```
 
-### Permission Issues
-
-**macOS:** Grant microphone access in System Preferences → Security & Privacy → Privacy → Microphone
-
-**Linux:** Add user to audio group:
-
-```bash
-sudo usermod -a -G audio $USER
-```
-
-## Development
-
-```bash
-# Install development dependencies
-pip install -r requirements-dev.txt
-
-# Run tests
-python -m pytest tests/
-
-# Format code
-black src/ tests/
-isort src/ tests/
-
-# Type checking
-mypy src/
-```
-
 ## Project Structure
 
 ```
@@ -217,10 +191,6 @@ faster-whisper-app/
 - Python 3.8+
 - Microphone access
 - ~500MB disk space (for base model)
-
-## run in background mode
-
-sudo bash -c "source venv/bin/activate && PYTHONPATH=src python -m faster_whisper_app"
 
 ## License
 

@@ -1,18 +1,17 @@
 # Faster-Whisper Global Hotkey Speech-to-Text App
 
 ## Project Overview
-A simple speech-to-text application using faster-whisper that responds to a global hotkey and outputs transcriptions to both terminal and browser simultaneously.
+A simple speech-to-text application using faster-whisper that responds to a global hotkey and outputs transcriptions to terminal plus types directly into active applications.
 
 ## Core Concept
-Press `F1` → Record audio → Transcribe with faster-whisper → Display in terminal AND browser
+Press `F1` → Record audio → Transcribe with faster-whisper → Display in terminal + type to active app
 
 ## Technology Stack
 - **Speech Recognition**: faster-whisper (SYSTRAN's optimized Whisper)
 - **Global Hotkey**: keyboard library
 - **Audio Recording**: pyaudio
 - **Terminal Output**: rich (for beautiful formatting)
-- **Browser Output**: FastAPI + WebSockets
-- **Frontend**: Simple HTML5 with JavaScript
+- **Text Output**: AppleScript integration to type into active applications
 
 ## Project Structure (Following Python Best Practices)
 ```
@@ -241,12 +240,12 @@ class AudioRecorder:
 ## Configuration
 ```python
 # config.py
-MODEL_SIZE = "base"        # tiny, base, small, medium, large
+MODEL_SIZE = "small"       # tiny, base, small, medium, large (default: small for speed)
 DEVICE = "cpu"             # cpu or cuda
 COMPUTE_TYPE = "int8"      # int8, float16, float32
 HOTKEY = "f1"              # Global hotkey combination
 SAMPLE_RATE = 16000        # Audio sample rate
-WEB_PORT = 8000           # Browser interface port
+# Configurable via .env file or environment variables
 ```
 
 ## Dependencies
@@ -430,7 +429,7 @@ def safe_record():
 ```
 
 ## Performance Notes
-- **Model Selection**: Start with "base" for good speed/accuracy balance
+- **Model Selection**: Uses "small" by default for optimal speed/accuracy balance
 - **Audio Quality**: 16kHz mono is optimal for Whisper models
 - **Memory Usage**: Larger models require more RAM
 - **Processing Time**: ~1-3 seconds for 10-second audio clips
