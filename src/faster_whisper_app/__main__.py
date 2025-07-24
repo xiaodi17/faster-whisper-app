@@ -3,8 +3,8 @@
 import logging
 import sys
 import signal
-import asyncio
 import threading
+import time
 from typing import Optional
 
 from .core.transcriber import FasterWhisperTranscriber
@@ -78,7 +78,7 @@ class SpeechToTextApp:
                     
                     if configured_device:
                         self.terminal.show_device_info(configured_device)
-                        print(f"🎤 Configured to use device {self.config.audio_device_index}: {configured_device['name']}")
+                        self.terminal.show_status(f"🎤 Configured to use device {self.config.audio_device_index}: {configured_device['name']}")
                     else:
                         self.terminal.show_error(f"Configured device {self.config.audio_device_index} not found!")
                         device_info = self.recorder.get_default_input_device()
@@ -87,7 +87,7 @@ class SpeechToTextApp:
                     # Show default device
                     device_info = self.recorder.get_default_input_device()
                     self.terminal.show_device_info(device_info)
-                    print(f"🎤 Using default device: {device_info['name']}")
+                    self.terminal.show_status(f"🎤 Using default device: {device_info['name']}")
             except Exception as e:
                 self.terminal.show_error(f"Audio device warning: {e}")
             
@@ -145,7 +145,6 @@ class SpeechToTextApp:
             return
         
         try:
-            import time
             processing_start = time.time()
             logger.info("🚀 Starting complete processing pipeline")
             
@@ -256,9 +255,6 @@ class SpeechToTextApp:
             total_time = time.time() - typing_start
             logger.error(f"❌ Text output failed after {total_time*1000:.1f}ms: {e}")
     
-    def _type_to_active_app(self, result: dict):
-        """Legacy sync method - kept for compatibility."""
-        self._type_to_active_app_async(result)
     
     def run(self) -> None:
         """Run the main application."""
@@ -285,7 +281,6 @@ class SpeechToTextApp:
                 # Keep running until interrupted
                 try:
                     while self.is_running:
-                        import time
                         time.sleep(0.1)
                 except KeyboardInterrupt:
                     pass

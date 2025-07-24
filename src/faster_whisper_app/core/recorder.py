@@ -107,10 +107,9 @@ class AudioRecorder:
                 if device_info['maxInputChannels'] == 0:
                     raise DeviceError(f"Device {device_index} is not an input device")
                 logger.info(f"Using device: {device_info['name']}")
-                print(f"🎤 Using device {device_index}: {device_info['name']}")
             else:
                 default_device = self.get_default_input_device()
-                print(f"🎤 Using default device: {default_device['name']}")
+                logger.info(f"Using default device: {default_device['name']}")
             
             # Start recording in separate thread
             self.is_recording = True
@@ -180,7 +179,6 @@ class AudioRecorder:
                     )
                     self.audio_frames.append(chunk)
                     # Small sleep to prevent CPU spinning
-                    import time
                     time.sleep(0.001)  # 1ms sleep for better performance
                 except OSError as e:
                     logger.warning(f"Audio read error: {e}")
@@ -194,34 +192,6 @@ class AudioRecorder:
                 self.stream.close()
                 self.stream = None
     
-    def get_audio_level(self, audio_chunk: bytes) -> float:
-        """Get audio level for volume indication.
-        
-        Args:
-            audio_chunk: Raw audio chunk
-            
-        Returns:
-            Audio level from 0.0 to 1.0
-        """
-        try:
-            if not audio_chunk:
-                return 0.0
-            
-            # Convert to numpy array
-            audio_array = np.frombuffer(audio_chunk, dtype=np.int16)
-            
-            if len(audio_array) == 0:
-                return 0.0
-            
-            # Calculate RMS level
-            rms = np.sqrt(np.mean(audio_array.astype(np.float64) ** 2))
-            
-            # Normalize to 0-1 range
-            level = min(rms / 10000.0, 1.0)
-            return max(0.0, level)
-            
-        except Exception:
-            return 0.0
     
     def cleanup(self) -> None:
         """Clean up audio resources."""
@@ -236,32 +206,3 @@ class AudioRecorder:
             self.audio = None
         
         logger.info("Audio recorder cleaned up")
-
-
-def test_audio_recording():
-    """Test audio recording functionality."""
-    try:
-        recorder = AudioRecorder()
-        
-        # List devices
-        devices = recorder.list_audio_devices()
-        print(f"📱 Found {len(devices)} audio input devices:")
-        for device in devices[:3]:  # Show first 3
-            print(f"  {device['index']}: {device['name']}")
-        
-        # Test default device
-        default_device = recorder.get_default_input_device()
-        print(f"🎤 Default device: {default_device['name']}")
-        
-        print("✅ Audio recording test passed")
-        
-        recorder.cleanup()
-        return True
-        
-    except Exception as e:
-        print(f"❌ Audio recording test failed: {e}")
-        return False
-
-
-if __name__ == "__main__":
-    test_audio_recording()
